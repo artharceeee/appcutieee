@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-buttons slot="start">
+          <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Users Around</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Show Loader before loading -->
+  <div class="center" *ngIf="!isLoaded">
+      <ion-spinner color="primary"></ion-spinner>
+  </div>
+
+  <!-- Google Maps -->
+  <agm-map [zoom]="18" [latitude]="lat" [longitude]="lng">
+      <!-- Your Location Marker -->
+      <agm-marker [latitude]="lat" [longitude]="lng">
+          <!-- Popover on click -->
+          <agm-info-window>
+              <p>
+                  You are here
+              </p>
+          </agm-info-window>
+      </agm-marker>
+
+      <!-- Nearby Users -->
+      <ng-container *ngFor="let user of usersAround">
+          <agm-marker *ngIf="user.uid != uid" [latitude]="user.location[0]" [longitude]="user.location[1]" [iconUrl]="{url: user.dp,
+         scaledSize: {
+         width: 30,
+         height: 30}
+         }">
+
+              <!-- Popover on click -->
+              <agm-info-window>
+                  <ion-item lines="none">
+                      <ion-avatar slot="start">
+                          <img src="{{user.dp}}" />
+                      </ion-avatar>
+                      <ion-label>
+                          <h2>{{user.name}}</h2>
+                          <p>{{convert(user.distance)}}</p>
+                      </ion-label>
+                  </ion-item>
+                  <ion-button expand="block" fill="clear">
+                      See Profile
+                  </ion-button>
+              </agm-info-window>
+
+          </agm-marker>
+      </ng-container>
+  </agm-map>
+
+</ion-content>
